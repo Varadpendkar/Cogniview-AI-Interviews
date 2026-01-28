@@ -18,16 +18,16 @@ interface Interviewer {
 interface Question {
   id: string;
   question: string;
-  followUpCount: number;
+  follow_up_count: number;
 }
 
-interface InterviewData {
+interface InterviewBase {
   name: string;
-  interviewerId: string;
+  interviewer_id: string;
   objective: string;
-  questionCount: number;
-  duration: number;
-  isAnonymous: boolean;
+  question_count: number;
+  time_duration: string;
+  is_anonymous: boolean;
   questions: Question[];
   description: string;
 }
@@ -48,13 +48,13 @@ const CreateInterviewModal: React.FC<CreateInterviewModalProps> = ({
   onInterviewCreated,
 }) => {
   const [step, setStep] = useState<Step>('details');
-  const [interviewData, setInterviewData] = useState<InterviewData>({
+  const [interviewData, setInterviewData] = useState<InterviewBase>({
     name: '',
-    interviewerId: '',
+    interviewer_id: '',
     objective: '',
-    questionCount: 5,
-    duration: 30,
-    isAnonymous: false,
+    question_count: 5,
+    time_duration: '30',
+    is_anonymous: false,
     questions: [],
     description: '',
   });
@@ -66,17 +66,16 @@ const CreateInterviewModal: React.FC<CreateInterviewModalProps> = ({
     }
   }, [open]);
 
-  const handleNext = (data: Partial<InterviewData>) => {
-    setInterviewData((prev) => ({ ...prev, ...data }));
+  const handleNext = (data: InterviewBase) => {
+    setInterviewData(data);
     setStep('questions');
   };
 
-  const handleBack = (data: Partial<InterviewData>) => {
-    setInterviewData((prev) => ({ ...prev, ...data }));
+  const handleBack = () => {
     setStep('details');
   };
 
-  const handleSave = (data: InterviewData) => {
+  const handleSave = (data: InterviewBase) => {
     console.log('Saving interview:', data);
     // Here you would typically send the data to your backend
     alert(`Interview "${data.name}" created successfully!`);
@@ -102,13 +101,12 @@ const CreateInterviewModal: React.FC<CreateInterviewModalProps> = ({
         
         {step === 'details' ? (
           <DetailsPopup
-            initialData={interviewData}
             interviewers={interviewers}
             onNext={handleNext}
           />
         ) : (
           <QuestionsPopup
-            initialData={interviewData}
+            interviewData={interviewData}
             onBack={handleBack}
             onSave={handleSave}
           />

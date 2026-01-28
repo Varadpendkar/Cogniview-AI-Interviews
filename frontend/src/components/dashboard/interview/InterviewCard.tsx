@@ -17,8 +17,6 @@ interface InterviewCardProps {
 const InterviewCard: React.FC<InterviewCardProps> = ({
   id,
   name,
-  interviewerId,
-  url,
   readableSlug,
   responseCount = 0,
   interviewerImage = '👨‍💻',
